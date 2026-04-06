@@ -6,7 +6,7 @@ import javax.swing.*;
 public class ShopifyLiquidFileType extends LanguageFileType {
     public static final ShopifyLiquidFileType INSTANCE = new ShopifyLiquidFileType();
     private ShopifyLiquidFileType() {
-        super(ShopifyLiquidLanguage.INTANCE);
+        super(ShopifyLiquidLanguage.INSTANCE);
     }
 
     @NotNull

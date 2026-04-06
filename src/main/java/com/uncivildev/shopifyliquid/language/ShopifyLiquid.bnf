@@ -1,0 +1,20 @@
+{
+parserClass="com.uncivildev.shopifyliquid.language.parser.ShopifyLiquidParser"
+
+extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+psiClassPrefix="ShopifyLiquid"
+psiImplClassSuffix="Impl"
+psiPackage="com.uncivildev.shopifyliquid.language.psi"
+psiImplPackage="com.uncivildev.shopifyliquid.language.psi.impl"
+
+elementTypeHolderClass="com.uncivildev.shopifyliquid.language.psi.ShopifyLiquidTypes"
+elementTypeClass="com.uncivildev.shopifyliquid.language.psi.ShopifyLiquidElementType"
+tokenTypeClass="com.uncivildev.shopifyliquid.language.psi.ShopifyLiquidTokenType"
+}
+
+shopifyLiquidFile ::= item_*
+
+private item_ ::= (property|COMMENT|CRLF)
+
+property ::= (KEY? SEPARATOR VALUE?) | KEY
