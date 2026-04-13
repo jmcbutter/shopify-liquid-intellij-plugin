@@ -1,0 +1,48 @@
+// This is a generated file. Not intended for manual editing.
+package com.uncivildev.shopifyliquid.language.psi.impl;
+
+import java.util.List;
+import org.jetbrains.annotations.*;
+import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.util.PsiTreeUtil;
+import static com.uncivildev.shopifyliquid.language.psi.ShopifyLiquidTypes.*;
+import com.intellij.extapi.psi.ASTWrapperPsiElement;
+import com.uncivildev.shopifyliquid.language.psi.*;
+
+public class ShopifyLiquidGenericTagImpl extends ASTWrapperPsiElement implements ShopifyLiquidGenericTag {
+
+  public ShopifyLiquidGenericTagImpl(@NotNull ASTNode node) {
+    super(node);
+  }
+
+  public void accept(@NotNull ShopifyLiquidVisitor visitor) {
+    visitor.visitGenericTag(this);
+  }
+
+  @Override
+  public void accept(@NotNull PsiElementVisitor visitor) {
+    if (visitor instanceof ShopifyLiquidVisitor) accept((ShopifyLiquidVisitor)visitor);
+    else super.accept(visitor);
+  }
+
+  @Override
+  @NotNull
+  public List<ShopifyLiquidExpression> getExpressionList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, ShopifyLiquidExpression.class);
+  }
+
+  @Override
+  @NotNull
+  public List<ShopifyLiquidParameter> getParameterList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, ShopifyLiquidParameter.class);
+  }
+
+  @Override
+  @NotNull
+  public PsiElement getIdentifier() {
+    return findNotNullChildByType(IDENTIFIER);
+  }
+
+}

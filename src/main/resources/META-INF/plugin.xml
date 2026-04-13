@@ -5,7 +5,7 @@
 
     <!-- Public plugin name should be written in Title Case.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/best-practices-for-listing.html#plugin-name -->
-    <name>Shopify-liquid</name>
+    <name>Shopify Liquid</name>
 
     <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
     <vendor url="https://www.uncivil.dev">Uncivil Development</vendor>
@@ -26,6 +26,17 @@
     <!-- Extensions defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
+        <lang.syntaxHighlighterFactory
+            language="ShopifyLiquid"
+            implementationClass="com.uncivildev.shopifyliquid.language.ShopifyLiquidSyntaxHighlighterFactory"
+        />
+        <lang.parserDefinition
+            language="ShopifyLiquid"
+            implementationClass="com.uncivildev.shopifyliquid.language.ShopifyLiquidParserDefinition"
+        />
+        <colorSettingsPage
+            implementation="com.uncivildev.shopifyliquid.language.ShopifyLiquidColorSettingsPage"
+        />
         <fileType
             name="Shopify Liquid"
             implementationClass="com.uncivildev.shopifyliquid.language.ShopifyLiquidFileType"
