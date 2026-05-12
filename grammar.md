@@ -17,3 +17,9 @@
 ### object
 ### tag
 ### text.html.basic
+
+
+# LOOKBEHINDS
+You can do a lookbehind w/ .flex files by doing yypushback(). For example: 
+"|\s*[a-zA-Z][a-zA-Z]*"
+Then pushback the non-pipe-or-space characters, set the state to "In Filter" or something like that

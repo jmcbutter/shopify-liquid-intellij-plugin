@@ -1,0 +1,44 @@
+* Tags
+- var((.prop|['prop']))*
+  case
+- ((val) (or|,)?)+
+  when
+- kwd
+  else, style, break, continue, raw, javascript, stylesheet end.*
+- CONDITION: ((var((.prop|['prop']))*|val) (oper (var((.prop|['prop']))*|val))?)
+  if, unless
+- val(, var((.prop|['prop']))*)?(, param: (val|var((.prop|['prop']))*))*
+  form
+- string(: string)?(, string)*
+  cycle
+- var in (var((.prop|['prop']))*|\((var((.prop|['prop']))*|num)..(var((.prop|['prop']))*|num)\)) (param: (val|var((.prop|['prop']))*))?(, param: (val|var((.prop|['prop']))*))*
+  for, tablerow
+- var((.prop|['prop']))* by num (, param: (val|var((.prop|['prop']))*))*
+  paginate
+- # .*
+  comment
+- @param {.*} .* - .*
+  inside doc - param declaration
+- .*
+  inside doc - message string
+- @example (render example)
+  inside doc - example
+- EXPRESSION: (val|var((.prop|['prop']))*) (| filter_kwd(: (val|var((.prop|['prop']))*))*)
+  echo, assign
+- string(, param: (val|var((.prop|['prop']))*))*
+  content_for
+- string|none
+  layout, section, sections
+- (val|var((.prop|['prop']))*)(((for|with) var((.prop|['prop']))* as var)|(, param: (val|var((.prop|['prop']))*))*)?
+  render
+- ((var((.prop|['prop']))*|val) oper (var((.prop|['prop']))*|val))(| filter_kwd(: (val|var((.prop|['prop']))*))*))
+  assign
+- var
+  capture, decrement, increment
+* Filters
+- (filter(: (val|var((.prop|['prop']))*)(, (val|var((.prop|['prop']))*))*)?)
+  most tags
+- (filter(: (val|var((.prop|['prop']))*)(: (val|var((.prop|['prop']))*))(, (val|var((.prop|['prop']))*))*)?)
+  highlight_active_tag, link_to_type, etc.
+- default: ..., allow_false: bool
+  default

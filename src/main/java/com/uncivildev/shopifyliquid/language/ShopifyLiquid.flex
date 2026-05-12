@@ -20,8 +20,10 @@ import com.intellij.psi.TokenType;
 
 WHITE_SPACE=[ \n\r\t\f]+
 IDENTIFIER=[a-zA-Z_][a-zA-Z0-9_-]*
+PROPERTY=(\.{IDENTIFIER}|\['{IDENTIFIER}'\]|\[\"{IDENTIFIER}\"\])
 NUMBER=[0-9]+(\.[0-9]+)?
-STRING_LITERAL=(\"[^\"]*\"|'[^']*')
+STRING_LITERAL=(\"(\\\"|[^\"])*\"|'(\\'|[^'])*\')
+
 
 %%
 
