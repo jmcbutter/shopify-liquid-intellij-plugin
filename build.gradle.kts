@@ -1,3 +1,5 @@
+import org.gradle.internal.classpath.Instrumented.systemProperty
+
 plugins {
     id("java")
     id("org.jetbrains.intellij.platform") version "2.10.2"
@@ -18,12 +20,10 @@ dependencies {
     intellijPlatform {
         intellijIdea("2025.2.4")
         testFramework(org.jetbrains.intellij.platform.gradle.TestFrameworkType.Platform)
-
         // Add plugin dependencies for compilation here:
-
         composeUI()
-
     }
+    testImplementation("junit:junit:4.13.2")
 }
 
 intellijPlatform {

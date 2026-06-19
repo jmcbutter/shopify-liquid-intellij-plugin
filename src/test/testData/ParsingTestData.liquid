@@ -1,0 +1,234 @@
+<!-- 1. Template text: prose, entities, and a LONE brace (TEMPLATE_TEXT) ----- -->
+<h1>Hello &amp; welcome!</h1>
+<style>.card { color: red; }</style>
+<p>A stray { brace in text is fine.</p>
+
+
+<!-- 2. Output: simple, chained dot lookups, bracket access, mixed ---------- -->
+{{ product.title }}
+{{ product.variants.first.price }}
+{{ product["featured_image"] }}
+{{ settings[block.id] }}
+{{ collections[product.type].url }}
+{{ 42 }}
+{{ 3.14 }}
+{{ 'single quoted string' }}
+
+
+<!-- 3. Filters: single, chained, positional args, named (colon) args ------- -->
+{{ "hello" | upcase }}
+{{ product.price | money | prepend: "from " }}
+{{ product.description | strip_html | truncate: 150, "..." }}
+{{ "a-b-c" | replace: "-", " " }}
+{{ image | image_url: width: 300, height: 300 | image_tag }}
+{{ articles | where: "type", "news" | first }}
+
+
+<!-- 4. Whitespace control: {%- -%} and {{- -}} ----------------------------- -->
+{%- assign trimmed = "x" -%}
+{{- product.handle -}}
+
+
+<!-- 5. Variable / expression tags ----------------------------------------- -->
+{% assign count = 0 %}
+{% assign name = product.title | downcase %}
+{% assign list = (1..5) %}
+{% increment counter %}
+{% decrement counter %}
+{% echo product.title | upcase %}
+
+
+<!-- 6. REGRESSION: tag-name words used as objects must lex as IDENTIFIER ---- -->
+{{ section.id }}
+{{ section.settings.heading }}
+{{ form.errors }}
+{{ paginate.pages }}
+
+
+<!-- 7. if / elsif / else (single comparison, or `contains`) ---------------- -->
+{% if product.available %}
+  Available
+{% elsif product.price > 1000 %}
+  Expensive
+{% else %}
+  Other
+{% endif %}
+
+{% if product.tags contains "sale" %}On sale{% endif %}
+
+
+<!-- 8. unless -------------------------------------------------------------- -->
+{% unless product.available %}
+  Sold out
+{% endunless %}
+
+
+<!-- 9. case / when / else -------------------------------------------------- -->
+{% case product.type %}
+  {% when "shirt", "tee" %}
+    Apparel
+  {% when "mug" %}
+    Drinkware
+  {% else %}
+    Other
+{% endcase %}
+
+
+<!-- 10. for loops: range, var range, reversed, REGRESSION params, break ---- -->
+{% for i in (1..3) %}
+  {{ i }}
+{% endfor %}
+
+{% for n in (1..product.count) %}
+  {{ n }}
+{% endfor %}
+
+{% for item in collection.products reversed %}
+  {{ item.title }}
+{% endfor %}
+
+{% for item in collection.products limit: 4 offset: 2 %}
+  {% if item.available == false %}{% continue %}{% endif %}
+  {% if forloop.index > 10 %}{% break %}{% endif %}
+  {{ item.title }}
+{% endfor %}
+
+
+<!-- 11. tablerow (REGRESSION: cols: as a param) ---------------------------- -->
+{% tablerow product in collection.products cols: 3 %}
+  {{ product.title }}
+{% endtablerow %}
+
+
+<!-- 12. paginate (REGRESSION: paginate.* object access inside) ------------- -->
+{% paginate collection.products by 12 %}
+  {% for product in collection.products %}
+    {{ product.title }}
+  {% endfor %}
+  {{ paginate.current_page }}
+{% endpaginate %}
+
+
+<!-- 13. capture ------------------------------------------------------------ -->
+{% capture greeting %}
+  Hello there
+{% endcapture %}
+
+
+<!-- 14. cycle (plain and grouped) ----------------------------------------- -->
+{% cycle "odd", "even" %}
+{% cycle "group1": "a", "b", "c" %}
+
+
+<!-- 15. render: bare, named params, for..as, with..as ---------------------- -->
+{% render "product-card" %}
+{% render "product-card", product: product, show_price: true %}
+{% render "item" for collection.products as item %}
+{% render "card" with product as card_product %}
+
+
+<!-- 16. section / sections / layout ---------------------------------------- -->
+{% section "header" %}
+{% sections "footer-group" %}
+{% layout "theme" %}
+
+
+<!-- 17. form (positional args only) ---------------------------------------- -->
+{% form "contact" %}
+  {{ form.errors }}
+{% endform %}
+
+{% form "product", product %}
+{% endform %}
+
+
+<!-- 18. comment block (keep body brace-free; see Part B) ------------------- -->
+{% comment %}
+  This whole block is a comment.
+{% endcomment %}
+
+
+<!-- 19. doc block ---------------------------------------------------------- -->
+{% doc %}
+  Documentation for this snippet.
+{% enddoc %}
+
+
+<!-- 20. style / stylesheet / javascript / schema blocks -------------------- -->
+{% style %}
+  .btn { color: {{ settings.color }}; }
+{% endstyle %}
+
+{% stylesheet %}
+  .card { padding: 1rem; }
+{% endstylesheet %}
+
+{% javascript %}
+  console.log("hi");
+{% endjavascript %}
+
+{% schema %}
+  { "name": "My Section", "settings": [] }
+{% endschema %}
+
+
+<!-- 21. {% liquid %} inline block (NEW lexer states) ----------------------- -->
+{% liquid
+  assign total = 0
+  for line in cart.items
+    assign total = total | plus: line.final_line_price
+  endfor
+  if total > 5000
+    echo "Free shipping"
+  else
+    echo "Add more"
+  endif
+-%}
+
+{% liquid assign single_line = 1 %}
+
+
+<!-- 22. Literals + empty/blank/nil in conditions --------------------------- -->
+{{ true }}
+{{ false }}
+{{ nil }}
+{{ blank }}
+{{ empty }}
+{% if cart.items == empty %}Cart is empty{% endif %}
+
+
+<!-- 23. Empty tag ---------------------------------------------------------- -->
+{%  %}
+
+
+<!-- ================ PART B: known limitations (expected errors) ===========
+     Everything below is expected to produce a PsiErrorElement or misparse
+     with the current grammar. They make good "next to fix" targets.
+     ======================================================================== -->
+
+
+<!-- B1. Logical and/or in conditions: `condition` only allows ONE comparison.
+        This is the most common real-world gap. -->
+{% if product.available and product.price > 1000 %}x{% endif %}
+{% if a or b %}x{% endif %}
+
+<!-- B2. form with mixed positional + named params: the comma-list greedily
+        eats `id` before `property` can see it. -->
+{% form "product", product, id: "custom", class: "form" %}{% endform %}
+
+<!-- B3. `{% layout none %}`: grammar accepts `nil`, not the identifier `none`. -->
+{% layout none %}
+
+<!-- B4. `?`-suffixed identifiers (boolean methods): `?` isn't in IDENTIFIER. -->
+{{ form.posted_successfully? }}
+
+<!-- B5. Raw-body tags aren't raw yet: inner Liquid is parsed normally. -->
+{% raw %}
+  This {{ should_be_literal }} and {% if x %} are NOT escaped.
+{% endraw %}
+
+<!-- B6. Custom/unknown tags: no generic_tag rule, so the name errors. -->
+{% my_custom_tag foo: "bar" %}
+
+<!-- B7. Inline comment form: HASH is followed by tokens, not TEMPLATE_TEXT. -->
+{% comment # short note %}{% endcomment %}

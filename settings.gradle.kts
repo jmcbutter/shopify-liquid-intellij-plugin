@@ -1,1 +1,1 @@
-rootProject.name = "shopify-liquid"
+rootProject.name = "sliq"
