@@ -1,5 +1,18 @@
-{% assign testing = 'assign' | filter: value | filter %}
+{%-    assign testing = 'assign' | filter: value | filter %}
+{% assign testing = 'asdf' | filter: value | filter %}
 <div></div>
 {% for test in (1..4) %}
-
+    {% for test in (1..4) %}
+        {% capture testing %}
+            Testing<div class="test"></div>
+        {% endcapture %}
+    {% endfor %}
 {% endfor %}
+
+{% schema %}
+
+{% endschema %}
+
+{% liquid
+    assign test = 'asdf'
+%}

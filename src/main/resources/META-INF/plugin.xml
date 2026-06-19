@@ -26,22 +26,15 @@
     <!-- Extensions defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
-        <lang.syntaxHighlighterFactory
-            language="ShopifyLiquid"
-            implementationClass="com.uncivildev.shopifyliquid.language.ShopifyLiquidSyntaxHighlighterFactory"
-        />
         <lang.parserDefinition
-            language="ShopifyLiquid"
-            implementationClass="com.uncivildev.shopifyliquid.language.ShopifyLiquidParserDefinition"
-        />
-        <colorSettingsPage
-            implementation="com.uncivildev.shopifyliquid.language.ShopifyLiquidColorSettingsPage"
+            language="Sliq"
+            implementationClass="com.uncivildev.sliq.lang.SliqParserDefinition"
         />
         <fileType
             name="Shopify Liquid"
-            implementationClass="com.uncivildev.shopifyliquid.language.ShopifyLiquidFileType"
+            implementationClass="com.uncivildev.sliq.lang.SliqFileType"
             fieldName="INSTANCE"
-            language="ShopifyLiquid"
+            language="Sliq"
             extensions="liquid"
         />
     </extensions>
