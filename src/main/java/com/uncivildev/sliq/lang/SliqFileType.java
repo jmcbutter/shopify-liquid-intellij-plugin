@@ -1,5 +1,6 @@
 package com.uncivildev.sliq.lang;
 import com.intellij.openapi.fileTypes.LanguageFileType;
+import com.uncivildev.sliq.ide.icons.SliqIcons;
 import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 

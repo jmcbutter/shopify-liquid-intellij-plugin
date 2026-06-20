@@ -1,4 +1,4 @@
-package com.uncivildev.sliq.lang;
+package com.uncivildev.sliq.ide.icons;
 import com.intellij.openapi.util.IconLoader;
 
 import javax.swing.*;

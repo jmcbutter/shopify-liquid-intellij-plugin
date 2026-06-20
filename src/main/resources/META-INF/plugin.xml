@@ -28,8 +28,11 @@
     <extensions defaultExtensionNs="com.intellij">
         <lang.parserDefinition
             language="Sliq"
-            implementationClass="com.uncivildev.sliq.lang.SliqParserDefinition"
+            implementationClass="com.uncivildev.sliq.lang.core.parser.SliqParserDefinition"
         />
+        <lang.syntaxHighlighterFactory
+                language="Sliq"
+                implementationClass="com.uncivildev.sliq.ide.highlight.SliqSyntaxHighlighterFactory"/>
         <fileType
             name="Shopify Liquid"
             implementationClass="com.uncivildev.sliq.lang.SliqFileType"

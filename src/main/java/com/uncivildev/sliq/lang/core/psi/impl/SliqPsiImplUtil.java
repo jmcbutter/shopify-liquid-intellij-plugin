@@ -3,7 +3,7 @@ package com.uncivildev.sliq.lang.core.psi.impl;
 import com.intellij.lang.ASTNode;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.psi.PsiElement;
-import com.uncivildev.sliq.lang.SliqIcons;
+import com.uncivildev.sliq.ide.icons.SliqIcons;
 import com.uncivildev.sliq.lang.core.psi.SliqElementFactory;
 import com.uncivildev.sliq.lang.core.psi.SliqFilter;
 import com.uncivildev.sliq.lang.core.psi.SliqProperty;

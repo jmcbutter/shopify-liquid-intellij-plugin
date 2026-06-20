@@ -1,4 +1,4 @@
-package com.uncivildev.sliq.lang;
+package com.uncivildev.sliq.lang.core.lexer;
 
 import andel.tokens.Token;import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.tree.IElementType;
@@ -26,6 +26,11 @@ import com.intellij.psi.TokenType;
 %state IN_OUTPUT
 %state IN_LIQUID_HEAD
 %state IN_LIQUID_BODY
+%state IN_FILTER
+%state IN_FILTER_PARAM
+%state IN_COMMENT
+%state IN_SHOPIFY_OBJECT
+%state IN_RAW
 
 WHITE_SPACE=[ \n\r\t\f]+
 IDENTIFIER=[a-zA-Z_][a-zA-Z0-9_-]*

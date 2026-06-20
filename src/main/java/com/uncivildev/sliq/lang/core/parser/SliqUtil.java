@@ -1,4 +1,4 @@
-package com.uncivildev.sliq.lang;
+package com.uncivildev.sliq.lang.core.parser;
 
 import com.google.common.collect.Lists;
 import com.intellij.openapi.project.Project;
@@ -10,6 +10,7 @@ import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.search.FileTypeIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
+import com.uncivildev.sliq.lang.SliqFileType;
 import com.uncivildev.sliq.lang.core.psi.SliqLiquidFile;
 import com.uncivildev.sliq.lang.core.psi.SliqProperty;
 import org.jetbrains.annotations.NotNull;

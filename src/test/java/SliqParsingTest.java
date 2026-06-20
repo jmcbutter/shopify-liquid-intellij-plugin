@@ -1,5 +1,5 @@
 import com.intellij.testFramework.ParsingTestCase;
-import com.uncivildev.sliq.lang.SliqParserDefinition;
+import com.uncivildev.sliq.lang.core.parser.SliqParserDefinition;
 
 public class SliqParsingTest extends ParsingTestCase {
     public SliqParsingTest() {

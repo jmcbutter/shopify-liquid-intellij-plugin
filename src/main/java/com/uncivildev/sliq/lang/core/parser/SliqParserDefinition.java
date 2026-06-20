@@ -1,4 +1,4 @@
-package com.uncivildev.sliq.lang;
+package com.uncivildev.sliq.lang.core.parser;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.ParserDefinition;
@@ -10,7 +10,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.TokenSet;
-import com.uncivildev.sliq.lang.core.parser.SliqParser;
+import com.uncivildev.sliq.lang.SliqLanguage;
+import com.uncivildev.sliq.lang.core.lexer.SliqLexerAdapter;
 import com.uncivildev.sliq.lang.core.psi.SliqLiquidFile;
 import com.uncivildev.sliq.lang.core.psi.SliqTypes;
 import org.jetbrains.annotations.NotNull;
