@@ -26,11 +26,13 @@ import com.intellij.psi.TokenType;
 %state IN_OUTPUT
 %state IN_LIQUID_HEAD
 %state IN_LIQUID_BODY
-%state IN_FILTER
-%state IN_FILTER_PARAM
+%state IN_TAG_FILTER
+%state IN_LIQUID_FILTER
+%state IN_OUTPUT_FILTER
 %state IN_COMMENT
-%state IN_SHOPIFY_OBJECT
+%state IN_LIQUID_COMMENT
 %state IN_RAW
+%state IN_LIQUID_RAW
 
 WHITE_SPACE=[ \n\r\t\f]+
 IDENTIFIER=[a-zA-Z_][a-zA-Z0-9_-]*
@@ -140,6 +142,38 @@ STRING_LITERAL=(\"(\\\"|[^\"])*\"|'(\\'|[^'])*\')
   "reversed"                { return SliqTypes.REVERSED; }
 }
 
+<IN_TAG> {
+  "|"                       { yybegin(IN_TAG_FILTER); return SliqTypes.PIPE; }
+}
+
+<IN_OUTPUT> {
+  "|"                       { yybegin(IN_OUTPUT_FILTER); return SliqTypes.PIPE; }
+}
+
+<IN_LIQUID_BODY> {
+  "|"                       { yybegin(IN_LIQUID_FILTER); return SliqTypes.PIPE; }
+}
+
+<IN_TAG_FILTER, IN_LIQUID_FILTER, IN_OUTPUT_FILTER> {
+    {WHITE_SPACE}             { return TokenType.WHITE_SPACE; }
+    // Custom / generic tag name (handled by generic_tag in the grammar).
+    {IDENTIFIER}              { return SliqTypes.FILTER; }
+}
+
+<IN_TAG_FILTER> {
+    ":"                       { yybegin(IN_TAG); }
+}
+
+<IN_LIQUID_FILTER> {
+    ":"                       { yybegin(IN_LIQUID_BODY); }
+}
+
+<IN_OUTPUT_FILTER> {
+    ":"                       { yybegin(IN_OUTPUT); }
+}
+
+
+
 // --- Shared operands & punctuation (after all keyword rules) -----------------
 <IN_TAG, IN_OUTPUT, IN_LIQUID_BODY> {
   {NUMBER}                  { return SliqTypes.NUMBER; }
@@ -150,7 +184,6 @@ STRING_LITERAL=(\"(\\\"|[^\"])*\"|'(\\'|[^'])*\')
   "."                       { return SliqTypes.DOT; }
   ","                       { return SliqTypes.COMMA; }
   ":"                       { return SliqTypes.COLON; }
-  "|"                       { return SliqTypes.PIPE; }
   "("                       { return SliqTypes.LPAREN; }
   ")"                       { return SliqTypes.RPAREN; }
   "["                       { return SliqTypes.LBRACKET; }
