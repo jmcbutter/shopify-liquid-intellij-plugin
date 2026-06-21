@@ -44,6 +44,10 @@ tasks {
         sourceCompatibility = "21"
         targetCompatibility = "21"
     }
+
+    runIde {
+        args("${project.projectDir}/src/test/testData/ParsingTestData.liquid")
+    }
 }
 
 sourceSets {

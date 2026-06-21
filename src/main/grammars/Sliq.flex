@@ -157,22 +157,23 @@ STRING_LITERAL=(\"(\\\"|[^\"])*\"|'(\\'|[^'])*\')
 <IN_TAG_FILTER, IN_LIQUID_FILTER, IN_OUTPUT_FILTER> {
     {WHITE_SPACE}             { return TokenType.WHITE_SPACE; }
     // Custom / generic tag name (handled by generic_tag in the grammar).
-    {IDENTIFIER}              { return SliqTypes.FILTER; }
+    {IDENTIFIER}              { return SliqTypes.FILTER_KWD; }
 }
 
 <IN_TAG_FILTER> {
-    ":"                       { yybegin(IN_TAG); }
+    ":"                       { yybegin(IN_TAG); return SliqTypes.COLON; }
+    "|"                       { return SliqTypes.PIPE; }
 }
 
 <IN_LIQUID_FILTER> {
-    ":"                       { yybegin(IN_LIQUID_BODY); }
+    ":"                       { yybegin(IN_LIQUID_BODY); return SliqTypes.COLON; }
+    "|"                       { return SliqTypes.PIPE; }
 }
 
 <IN_OUTPUT_FILTER> {
-    ":"                       { yybegin(IN_OUTPUT); }
+    ":"                       { yybegin(IN_OUTPUT); return SliqTypes.COLON; }
+    "|"                       { return SliqTypes.PIPE; }
 }
-
-
 
 // --- Shared operands & punctuation (after all keyword rules) -----------------
 <IN_TAG, IN_OUTPUT, IN_LIQUID_BODY> {
@@ -195,12 +196,12 @@ STRING_LITERAL=(\"(\\\"|[^\"])*\"|'(\\'|[^'])*\')
   {WHITE_SPACE}             { return TokenType.WHITE_SPACE; }
 }
 
-<IN_TAG> {
+<IN_TAG, IN_TAG_FILTER, IN_LIQUID_FILTER> {
   "-%}"                     { yybegin(YYINITIAL); return SliqTypes.LIQUID_TAG_END; }
   "%}"                      { yybegin(YYINITIAL); return SliqTypes.LIQUID_TAG_END; }
 }
 
-<IN_OUTPUT> {
+<IN_OUTPUT, IN_OUTPUT_FILTER> {
   "-}}"                     { yybegin(YYINITIAL); return SliqTypes.LIQUID_OUTPUT_END; }
   "}}"                      { yybegin(YYINITIAL); return SliqTypes.LIQUID_OUTPUT_END; }
 }
