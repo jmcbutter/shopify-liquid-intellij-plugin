@@ -179,7 +179,7 @@ public class SliqSyntaxHighlighter extends SyntaxHighlighterBase {
             return CONSTANTS;
         }
 
-        if (tokenType.equals(SliqTypes.FILTER)) {
+        if (tokenType.equals(SliqTypes.FILTER_KWD)) {
             return CONSTANTS;
         }
 
