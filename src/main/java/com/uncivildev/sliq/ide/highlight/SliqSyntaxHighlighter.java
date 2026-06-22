@@ -10,11 +10,11 @@ import org.jetbrains.annotations.NotNull;
 
 public class SliqSyntaxHighlighter extends SyntaxHighlighterBase {
     public static final TextAttributesKey KEYWORD =
-            TextAttributesKey.createTextAttributesKey("KEYWORD", DefaultLanguageHighlighterColors.KEYWORD);
+            TextAttributesKey.createTextAttributesKey("KEYWORD", DefaultLanguageHighlighterColors.CONSTANT);
     private static final TextAttributesKey[] KEYWORDS = new TextAttributesKey[]{KEYWORD};
 
     public static final TextAttributesKey BLOCK_KEYWORD =
-            TextAttributesKey.createTextAttributesKey("BLOCK_KEYWORD", DefaultLanguageHighlighterColors.PREDEFINED_SYMBOL);
+            TextAttributesKey.createTextAttributesKey("BLOCK_KEYWORD", DefaultLanguageHighlighterColors.CONSTANT);
     private static final TextAttributesKey[] BLOCK_KEYWORDS = new TextAttributesKey[]{BLOCK_KEYWORD};
 
     public static final TextAttributesKey LOGICAL_OPERATOR =
