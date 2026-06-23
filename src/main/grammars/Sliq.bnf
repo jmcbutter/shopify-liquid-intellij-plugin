@@ -14,226 +14,38 @@ psiImplClassSuffix="Impl"
 psiPackage="com.uncivildev.sliq.lang.core.psi"
 psiImplPackage="com.uncivildev.sliq.lang.core.psi.impl"
 
-psiImplUtilClass="com.uncivildev.sliq.lang.core.psi.impl.SliqPsiImplUtil"
-
-// --- Pattern-based attributes (applied to every rule whose name matches) ------
-
-// Give every individual `*_tag` rule a shared marker supertype so you can do
-// `element instanceof SliqTag` for folding, block matching, etc. You must
-// hand-write a one-line interface:
-//
-//     interface SliqTag : SliqElement
-//
-// The negative lookahead excludes the `liquid_tag` wrapper, which ends in
-// `_tag` but is the {% %} container rather than a tag itself.
-implements("(?!liquid_tag$).+_tag") = "com.uncivildev.sliq.lang.core.psi.ext.SliqTag"
-
-// Commit to a tag as soon as its leading keyword is consumed: errors get
-// reported *inside* the tag and recovery no longer blows up the whole
-// `tag_body` alternation. Harmless on single-token tags, and also pins the
-// `liquid_tag` wrapper (after `{%`), which is what we want.
-pin(".+_tag") = 1
-
 tokens = [
   // Delimiters
   LIQUID_TAG_START='regexp:\{%-?'
   LIQUID_TAG_END='regexp:-?%}'
+
   LIQUID_OUTPUT_START='regexp:\{\{-?'
   LIQUID_OUTPUT_END='regexp:-?}}'
 
-  // Keywords (Tags)
-  ASSIGN='assign'
-  BREAK='break'
-  CAPTURE='capture'
-  ENDCAPTURE='endcapture'
-  CASE='case'
-  CONTENT_FOR='content_for'
-  DOC='doc'
-  ENDDOC='enddoc'
-  ENDCASE='endcase'
-  COMMENT='comment'
-  ENDCOMMENT='endcomment'
-  CONTINUE='continue'
-  CYCLE='cycle'
-  DECREMENT='decrement'
-  ECHO='echo'
-  ELSE='else'
-  ELSIF='elsif'
-  FOR='for'
-  ENDFOR='endfor'
-  FORM='form'
-  ENDFORM='endform'
-  IF='if'
-  ENDIF='endif'
-  INCREMENT='increment'
-  INCLUDE='include'
-  JAVASCRIPT='javascript'
-  ENDJAVASCRIPT='endjavascript'
-  LAYOUT='layout'
-  LIQUID='liquid'
-  PAGINATE='paginate'
-  ENDPAGINATE='endpaginate'
-  RAW='raw'
-  ENDRAW='endraw'
-  RENDER='render'
-  SCHEMA='schema'
-  ENDSCHEMA='endschema'
-  SECTION='section'
-  SECTIONS='sections'
-  STYLE='style'
-  ENDSTYLE='endstyle'
-  STYLESHEET='stylesheet'
-  ENDSTYLESHEET='endstylesheet'
-  TABLEROW='tablerow'
-  ENDTABLEROW='endtablerow'
-  UNLESS='unless'
-  ENDUNLESS='endunless'
-  WHEN='when'
+  TAG_NAME_RAW='raw'
+  TAG_NAME_END_RAW='endraw'
 
-  // Operators
-  SET='='
-  EQ='=='
-  NE='!='
-  GT='>'
-  LT='<'
-  GE='>='
-  LE='<='
-  OR='or'
-  AND='and'
-  CONTAINS='contains'
-  IN='in'
-  BY='by'
-  WITH='with'
-  AS='as'
-  REVERSED='reversed'
-  OFFSET='offset'
-  LIMIT='limit'
-  COLS='cols'
 
-  // Literals & Other
-  FALSE='false'
-  TRUE='true'
-  NIL='nil'
-  BLANK='blank'
-  EMPTY='empty'
+  WHITE_SPACE='regexp:[ \n\r\t\f]+'
 
-  DOT='.'
-  COMMA=','
-  COLON=':'
-  PIPE='|'
-  LPAREN='('
-  RPAREN=')'
-  LBRACKET='['
-  RBRACKET=']'
-  RANGE='..'
-  HASH='#'
-
-  // Complex tokens
-  IDENTIFIER='regexp:[a-zA-Z_][a-zA-Z0-9_-]*'
-  FILTER_KWD='regexp:[a-zA-Z_][a-zA-Z0-9_-]*'
-  NUMBER='regexp:[0-9]+(\.[0-9]+)?'
-  STRING_LITERAL="regexp:(\"[^\"]*\"|'[^']*')"
-  TEMPLATE_TEXT='regexp:[^{]+|\{'
+  NOT_END_RAW_TAG='regexp:(.(?!\{%-?\s*endraw\s*-?%}))*.'
+  TEMPLATE_TEXT='regexp:.*'
 ]
 }
 
-sliqLiquidFile ::= item*
+sliqFile ::= core*
 
-private item ::= TEMPLATE_TEXT | liquid_tag | liquid_output
+core ::= raw_tag | doc_tag | comment_block | style_codefence | stylesheet_codefence | json_codefence | javascript_codefence | object | tag
 
-liquid_tag ::= LIQUID_TAG_START (liquid_kw_body | tag_body)? LIQUID_TAG_END
-liquid_output ::= LIQUID_OUTPUT_START expression LIQUID_OUTPUT_END {pin=1}
+raw_tag ::= raw_tag_start NOT_END_RAW_TAG raw_tag_end
+raw_tag_start ::= LIQUID_TAG_START TAG_NAME_RAW LIQUID_TAG_END
+raw_tag_end ::= LIQUID_TAG_START TAG_NAME_END_RAW LIQUID_TAG_END
 
-private liquid_kw_body ::=
-    liquid_tag_kw (tag_body)*
-
-private tag_body ::=
-    expression_body | block_open_body | block_clause_body | block_end_body | simple_body
-
-private expression_body ::=
-    assign_tag | cycle_tag | decrement_tag | echo_tag | increment_tag | layout_tag |
-    render_tag | section_tag | sections_tag
-
-private block_open_body ::=
-    capture_tag | case_tag | comment_tag | doc_tag | for_tag | form_tag | if_tag | javascript_tag | paginate_tag |
-    raw_tag | schema_tag | style_tag | stylesheet_tag | tablerow_tag | unless_tag
-
-private block_clause_body ::=
-    else_tag | elsif_tag | when_tag
-
-private block_end_body ::=
-    endcapture_tag | endcase_tag | endcomment_tag | enddoc_tag | endfor_tag | endform_tag | endif_tag |
-    endjavascript_tag | endpaginate_tag | endraw_tag | endschema_tag | endstyle_tag | endstylesheet_tag |
-    endtablerow_tag | endunless_tag
-
-private simple_body ::=
-    break_tag | continue_tag
-
-
-
-
-assign_tag ::= ASSIGN IDENTIFIER SET expression
-break_tag ::= BREAK
-capture_tag ::= CAPTURE IDENTIFIER
-endcapture_tag ::= ENDCAPTURE
-doc_tag ::= DOC
-enddoc_tag ::= ENDDOC
-case_tag ::= CASE variable_lookup
-endcase_tag ::= ENDCASE
-comment_tag ::= COMMENT (HASH TEMPLATE_TEXT?)?
-endcomment_tag ::= ENDCOMMENT
-continue_tag ::= CONTINUE
-cycle_tag ::= CYCLE (literal (COLON literal)? (COMMA literal)*)
-decrement_tag ::= DECREMENT variable_lookup
-echo_tag ::= ECHO expression
-else_tag ::= ELSE
-elsif_tag ::= ELSIF condition
-for_tag ::= FOR IDENTIFIER IN (variable_lookup | range_expression) (REVERSED)? (property)*
-endfor_tag ::= ENDFOR
-form_tag ::= FORM (literal | variable_lookup) (COMMA (literal | variable_lookup))* (property)*
-endform_tag ::= ENDFORM
-if_tag ::= IF condition
-endif_tag ::= ENDIF
-increment_tag ::= INCREMENT variable_lookup
-javascript_tag ::= JAVASCRIPT
-endjavascript_tag ::= ENDJAVASCRIPT
-layout_tag ::= LAYOUT (literal | NIL)
-liquid_tag_kw ::= LIQUID
-paginate_tag ::= PAGINATE variable_lookup BY NUMBER (property)*
-endpaginate_tag ::= ENDPAGINATE
-raw_tag ::= RAW
-endraw_tag ::= ENDRAW
-render_tag ::= RENDER (STRING_LITERAL | variable_lookup) ((FOR | WITH) variable_lookup AS IDENTIFIER | (COMMA property)*)?
-schema_tag ::= SCHEMA
-endschema_tag ::= ENDSCHEMA
-section_tag ::= SECTION (STRING_LITERAL | variable_lookup)
-sections_tag ::= SECTIONS (STRING_LITERAL | variable_lookup)
-style_tag ::= STYLE
-endstyle_tag ::= ENDSTYLE
-stylesheet_tag ::= STYLESHEET
-endstylesheet_tag ::= ENDSTYLESHEET
-tablerow_tag ::= TABLEROW IDENTIFIER IN (variable_lookup | range_expression) (property)*
-endtablerow_tag ::= ENDTABLEROW
-unless_tag ::= UNLESS condition
-endunless_tag ::= ENDUNLESS
-when_tag ::= WHEN (value ((OR | COMMA) value)*)
-
-condition ::= expression (comparison_operator expression)?
-comparison_operator ::= EQ | NE | GT | LT | GE | LE | CONTAINS
-
-parameter ::= IDENTIFIER COLON (literal | variable_lookup) {pin=1}
-property ::= IDENTIFIER COLON expression {pin=1 implements="com.intellij.psi.PsiNameIdentifierOwner" methods=[getKey getValue getName setName getNameIdentifier getPresentation]}
-
-expression ::= value (PIPE filter)*
-filter ::= FILTER_KWD (COLON filter_arguments)? {implements="com.intellij.psi.PsiNameIdentifierOwner" methods=[getName setName getNameIdentifier]}
-filter_arguments ::= arguments (COLON arguments)*
-arguments ::= expression (COMMA expression)*
-
-value ::= literal | variable_lookup | range_expression
-literal ::= NUMBER | STRING_LITERAL | boolean_literal | NIL | BLANK | EMPTY
-boolean_literal ::= TRUE | FALSE
-
-variable_lookup ::= IDENTIFIER (accessor)* {implements="com.intellij.psi.PsiNameIdentifierOwner" methods=[getName setName getNameIdentifier]}
-accessor ::= DOT IDENTIFIER | LBRACKET expression RBRACKET
-
-range_expression ::= LPAREN (NUMBER | variable_lookup) RANGE (NUMBER | variable_lookup) RPAREN
+doc_tag ::= 'DOC_PLACEHOLDER'
+comment_block ::= 'COMMENT_PLACEHOLDER'
+style_codefence ::= 'STYLE_CODEFENCE_PLACEHOLDER'
+stylesheet_codefence ::= 'STYLESHEET_CODEFENCE_PLACEHOLDER'
+json_codefence ::= 'JSON_CODEFENCE_PLACEHOLDER'
+javascript_codefence ::= 'JAVASCRIPT_CODEFENCE_PLACEHOLDER'
+object ::= 'OBJECT_PLACEHOLDER'
+tag ::= 'TAG_PLACEHOLDER'
