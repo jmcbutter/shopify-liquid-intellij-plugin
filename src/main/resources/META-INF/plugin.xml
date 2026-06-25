@@ -40,5 +40,6 @@
             language="Sliq"
             extensions="liquid"
         />
+        <colorSettingsPage implementation="com.uncivildev.sliq.ide.color.SliqColorSettingsPage" />
     </extensions>
 </idea-plugin>
