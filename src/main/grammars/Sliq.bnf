@@ -16,36 +16,27 @@ psiImplPackage="com.uncivildev.sliq.lang.core.psi.impl"
 
 tokens = [
   // Delimiters
-  LIQUID_TAG_START='regexp:\{%-?'
+  LIQUID_TAG_BEGIN='regexp:\{%-?'
   LIQUID_TAG_END='regexp:-?%}'
 
   LIQUID_OUTPUT_START='regexp:\{\{-?'
   LIQUID_OUTPUT_END='regexp:-?}}'
 
   TAG_NAME_RAW='raw'
-  TAG_NAME_END_RAW='endraw'
-
+  TAG_NAME_ENDRAW='endraw'
 
   WHITE_SPACE='regexp:[ \n\r\t\f]+'
 
-  NOT_END_RAW_TAG='regexp:(.(?!\{%-?\s*endraw\s*-?%}))*.'
+  RAW_TEXT='regexp:(.|[\n\r\t\f ])*'
   TEMPLATE_TEXT='regexp:.*'
 ]
 }
 
 sliqFile ::= core*
 
-core ::= raw_tag | doc_tag | comment_block | style_codefence | stylesheet_codefence | json_codefence | javascript_codefence | object | tag
+core ::= raw_tag
 
-raw_tag ::= raw_tag_start NOT_END_RAW_TAG raw_tag_end
-raw_tag_start ::= LIQUID_TAG_START TAG_NAME_RAW LIQUID_TAG_END
-raw_tag_end ::= LIQUID_TAG_START TAG_NAME_END_RAW LIQUID_TAG_END
-
-doc_tag ::= 'DOC_PLACEHOLDER'
-comment_block ::= 'COMMENT_PLACEHOLDER'
-style_codefence ::= 'STYLE_CODEFENCE_PLACEHOLDER'
-stylesheet_codefence ::= 'STYLESHEET_CODEFENCE_PLACEHOLDER'
-json_codefence ::= 'JSON_CODEFENCE_PLACEHOLDER'
-javascript_codefence ::= 'JAVASCRIPT_CODEFENCE_PLACEHOLDER'
-object ::= 'OBJECT_PLACEHOLDER'
-tag ::= 'TAG_PLACEHOLDER'
+raw_tag ::= raw_tag_begin raw_content* raw_tag_end
+raw_tag_begin ::= LIQUID_TAG_BEGIN TAG_NAME_RAW LIQUID_TAG_END
+raw_tag_end ::= LIQUID_TAG_BEGIN TAG_NAME_ENDRAW LIQUID_TAG_END
+raw_content ::= RAW_TEXT+

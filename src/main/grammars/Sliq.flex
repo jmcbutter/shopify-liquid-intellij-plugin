@@ -34,7 +34,7 @@ WHITE_SPACE=[ \n\r\t\f]+
 <YYINITIAL> {
   // The `-` strip marker stays in the token text; we return the plain token
   // type because the grammar doesn't declare separate *_STRIP tokens.
-  {LIQUID_TAG_START}             { yybegin(TAG);     return SliqTypes.LIQUID_TAG_START; }
+  {LIQUID_TAG_START}             { yybegin(TAG);     return SliqTypes.LIQUID_TAG_BEGIN; }
 
   ([^\{]+|\{)                    { return SliqTypes.TEMPLATE_TEXT; }
 }
@@ -43,7 +43,7 @@ WHITE_SPACE=[ \n\r\t\f]+
   {WHITE_SPACE}             { return TokenType.WHITE_SPACE; }
 
   "raw"                     { yybegin(RAW_HEAD); return SliqTypes.TAG_NAME_RAW; }
-  "endraw"                  { return SliqTypes.TAG_NAME_END_RAW; }
+  "endraw"                  { return SliqTypes.TAG_NAME_ENDRAW; }
 
   {LIQUID_TAG_END}          { yybegin(YYINITIAL); return SliqTypes.LIQUID_TAG_END; }
 }
@@ -55,9 +55,9 @@ WHITE_SPACE=[ \n\r\t\f]+
 }
 
 <RAW> {
-  \{%-? / \s*endraw\s*-?%\}   { yybegin(TAG); return SliqTypes.LIQUID_TAG_START; }
-
-  [^]* / \{%-?\s*endraw\s*-?%\}              { return SliqTypes.NOT_END_RAW_TAG; }
+  \{%-? / \s*endraw\s*-?%\}   { yybegin(TAG); return SliqTypes.LIQUID_TAG_BEGIN; }
+  [^{]+                       { return SliqTypes.RAW_TEXT; }
+  "{"                         { return SliqTypes.RAW_TEXT; }
 }
 
 [^]                         { return TokenType.BAD_CHARACTER; }
