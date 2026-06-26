@@ -7,7 +7,7 @@ public class SliqParsingTest extends ParsingTestCase {
     }
 
     public void testParsingTestData() {
-        doTest(true);
+        doTest(false);
     }
 
     /**

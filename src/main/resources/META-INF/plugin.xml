@@ -41,5 +41,8 @@
             extensions="liquid"
         />
         <colorSettingsPage implementation="com.uncivildev.sliq.ide.color.SliqColorSettingsPage" />
+        <completion.contributor
+            language="Sliq"
+            implementationClass="com.uncivildev.sliq.lang.core.completion.SliqCompletionContributor" />
     </extensions>
 </idea-plugin>

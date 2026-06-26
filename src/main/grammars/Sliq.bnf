@@ -13,6 +13,7 @@ psiClassPrefix="Sliq"
 psiImplClassSuffix="Impl"
 psiPackage="com.uncivildev.sliq.lang.core.psi"
 psiImplPackage="com.uncivildev.sliq.lang.core.psi.impl"
+psiImplUtilClass="com.uncivildev.sliq.lang.core.psi.impl.SliqPsiImplUtil"
 
 tokens = [
   // Delimiters
@@ -34,9 +35,22 @@ tokens = [
 
 sliqFile ::= core*
 
-core ::= raw_tag
+core ::= raw_tag {
+  recoverWhile = recover_tag_end
+}
 
-raw_tag ::= raw_tag_begin raw_content* raw_tag_end
-raw_tag_begin ::= LIQUID_TAG_BEGIN TAG_NAME_RAW LIQUID_TAG_END
-raw_tag_end ::= LIQUID_TAG_BEGIN TAG_NAME_ENDRAW LIQUID_TAG_END
+raw_tag ::= raw_tag_begin raw_content* raw_tag_end? {
+  pin = 1
+}
+
+raw_tag_begin ::= LIQUID_TAG_BEGIN TAG_NAME_RAW LIQUID_TAG_END {
+  pin = 1
+}
+
+raw_tag_end ::= LIQUID_TAG_BEGIN TAG_NAME_ENDRAW LIQUID_TAG_END {
+  pin = 1
+}
+
 raw_content ::= RAW_TEXT+
+
+private recover_tag_end ::= !(LIQUID_TAG_BEGIN)
