@@ -44,5 +44,6 @@
         <completion.contributor
             language="Sliq"
             implementationClass="com.uncivildev.sliq.lang.core.completion.SliqCompletionContributor" />
+        <lang.foldingBuilder language="Sliq" implementationClass="com.uncivildev.sliq.ide.folding.SliqFoldingBuilder" />
     </extensions>
 </idea-plugin>
