@@ -44,11 +44,11 @@ raw_tag ::= raw_tag_begin raw_content* raw_tag_end? {
 }
 
 raw_tag_begin ::= LIQUID_TAG_BEGIN TAG_NAME_RAW LIQUID_TAG_END {
-  pin = 1
+  pin = 2
 }
 
 raw_tag_end ::= LIQUID_TAG_BEGIN TAG_NAME_ENDRAW LIQUID_TAG_END {
-  pin = 1
+  pin = 2
 }
 
 raw_content ::= RAW_TEXT+
